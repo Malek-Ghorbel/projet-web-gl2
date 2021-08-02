@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block style %}
+    {% block headerstyle %}
+        {{ parent() }}
+    {% endblock%}
+    {% block bodystyle%}
+        {{ parent() }}
+    {% endblock %}
+{% endblock %}
+
+{% block body %}
+    {% set counter = 0 %}
+    {% set toclose = 1 %}
+    <div class="container">
+        <div class="row mb-2">
+        {% for category in categories %}
+            {% if not category.deletedAt %}
+                <div class="col col-lg-4" style="margin-bottom:20px">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title" style="margin: 0 0 5px 0">{{ category.categoryName }}</h5>
+                            {% if isAdmin is defined and isAdmin == true %}
+                                <a href="{{ path("category.delete",{'id': category.getCategoryId()}) }}" class="card-link btn btn-danger">Delete</a>
+                            {% endif %}
+
+                            <a href="{{ path('product.list.category',{'id':category.getCategoryId()}) }}" class="card-link btn btn-primary">List Products</a>
+                        </div>
+                    </div>
+                </div>
+                {% set counter = counter+1 %}
+            {% endif %}
+        {% endfor %}
+        </div>
+        {% if counter == 0%}
+            <h4 class="text-danger">There are no categories.</h4><br>
+        {% endif %}
+        {% if isAdmin is defined and isAdmin == true %}
+            <a href="{{ path("category.add") }}" class="btn btn-info">Add Category</a>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block footer %}
+{% endblock %}
+
